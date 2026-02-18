@@ -1,0 +1,12 @@
+# Secure FOTA Manager - Required Dependencies
+# GUI Framework
+customtkinter>=5.2.0
+
+# Cryptography and Security
+ecdsa>=0.18.0
+cryptography>=41.0.0
+
+# GitHub Cloud Integration
+requests>=2.31.0
+
+# Note: zlib is built into Python, no need to install separately

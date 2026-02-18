@@ -1,0 +1,320 @@
+# ============================================================================
+# SECURE AUTOMOTIVE FOTA - WHITELIST .gitignore
+# ============================================================================
+# Strategy: Block ALL files by default, explicitly allow only showcased files
+# Purpose: Academic project security - prevent accidental source code exposure
+# Date: February 18, 2026
+# ============================================================================
+
+# ============================================================================
+# GLOBAL BLOCK: Deny everything at root level
+# ============================================================================
+/*
+
+# ============================================================================
+# ESSENTIAL PROJECT FILES (Always allow)
+# ============================================================================
+!/.gitignore
+!/README.md
+!/DIAGRAM_GUIDE.txt
+
+# ============================================================================
+# DIAGRAMS FOLDER (Complete whitelist - showcase system architecture)
+# ============================================================================
+!/Diagrams/
+!/Diagrams/**
+
+# ============================================================================
+# 1. SERVER_PYTHON - Showcase: Cryptography & Automation Skills
+# ============================================================================
+# Goal: Demonstrate Python crypto engine, header packaging, metadata management
+# ============================================================================
+!/SERVER_PYTHON/
+
+# Block all Python files by default
+/SERVER_PYTHON/*
+
+# ✅ WHITELIST: Cryptographic engine (AES-128-CBC, ECDSA P-256, SHA-256)
+!/SERVER_PYTHON/crypto_utils.py
+
+# ✅ WHITELIST: Firmware packaging (228-byte FOTA header, binary management)
+!/SERVER_PYTHON/firmware_manager.py
+
+# ✅ WHITELIST: Protocol definitions (Header structure, packet formats)
+!/SERVER_PYTHON/protocol.py
+
+# ✅ WHITELIST: Network utilities (TCP server, UDP discovery beacon)
+!/SERVER_PYTHON/network_utils.py
+
+# ✅ WHITELIST: Dependencies list
+!/SERVER_PYTHON/requirements.txt
+
+# ❌ BLOCKED: Application logic (main.py)
+# ❌ BLOCKED: Firebase credentials (firebase_config.json - CRITICAL SECURITY)
+# ❌ BLOCKED: Firebase handler (firebase_handler.py - database schema exposure)
+# ❌ BLOCKED: Build artifacts (__pycache__, build/, logs/)
+
+# ============================================================================
+# 2. GATEWAY (ESP32) - Showcase: Network Client & UDS Protocol
+# ============================================================================
+# Goal: Demonstrate Wi-Fi/Ethernet client, UDS client implementation, CAN-TP
+# ============================================================================
+!/Gateway_FOTA_ESP32/
+
+# Block all Gateway files by default
+/Gateway_FOTA_ESP32/*
+
+# Allow essential build configuration
+!/Gateway_FOTA_ESP32/CMakeLists.txt
+!/Gateway_FOTA_ESP32/sdkconfig
+!/Gateway_FOTA_ESP32/README.md
+
+# Allow main folder structure (but block contents)
+!/Gateway_FOTA_ESP32/main/
+/Gateway_FOTA_ESP32/main/*
+
+# Allow include folder structure
+!/Gateway_FOTA_ESP32/main/include/
+/Gateway_FOTA_ESP32/main/include/*
+
+# Allow src folder structure
+!/Gateway_FOTA_ESP32/main/src/
+/Gateway_FOTA_ESP32/main/src/*
+
+# ✅ WHITELIST: UDS Client (ISO 14229-1 implementation, CAN-TP bridge)
+!/Gateway_FOTA_ESP32/main/src/uds_client.cpp
+!/Gateway_FOTA_ESP32/main/include/uds/uds_client.hpp
+
+# ✅ WHITELIST: UDP Discovery (Dynamic device discovery protocol)
+!/Gateway_FOTA_ESP32/main/src/udp_discovery.cpp
+!/Gateway_FOTA_ESP32/main/include/network/udp_discovery.hpp
+
+# ✅ WHITELIST: FOTA Security (Pre-validation: SHA-256 + ECDSA on gateway)
+!/Gateway_FOTA_ESP32/main/src/fota_security.cpp
+!/Gateway_FOTA_ESP32/main/include/fota/fota_security.hpp
+
+# ✅ WHITELIST: FOTA Protocol (Header parsing, packet structures)
+!/Gateway_FOTA_ESP32/main/include/fota/fota_protocol.hpp
+
+# ✅ WHITELIST: Version Checker (Metadata comparison, update decision logic)
+!/Gateway_FOTA_ESP32/main/src/version_checker.cpp
+!/Gateway_FOTA_ESP32/main/include/fota/version_checker.hpp
+
+# ✅ WHITELIST: ISO-TP Client (ISO 15765-2 transport layer implementation)
+!/Gateway_FOTA_ESP32/main/src/isotp_client.cpp
+!/Gateway_FOTA_ESP32/main/include/isotp/isotp_client.hpp
+
+# ✅ WHITELIST: CMakeLists for main component
+!/Gateway_FOTA_ESP32/main/CMakeLists.txt
+
+# ❌ BLOCKED: Main application logic (main.cpp - control flow)
+# ❌ BLOCKED: FOTA manager (fota_manager.cpp - orchestration logic)
+# ❌ BLOCKED: Wi-Fi credentials (wifi_station.cpp - may contain hardcoded SSID/password)
+# ❌ BLOCKED: Build artifacts (build/, managed_components/)
+
+# Block build output completely
+/Gateway_FOTA_ESP32/build/
+/Gateway_FOTA_ESP32/managed_components/
+
+# ============================================================================
+# 3. TARGET ECU (STM32 Bootloader) - Showcase: Embedded Security & Flash Management
+# ============================================================================
+# Goal: Demonstrate dual-slot management, stream-based AES, verify-then-decrypt
+# ============================================================================
+!/Target_ECU_STM32_Bootloader/
+
+# Block all bootloader files by default
+/Target_ECU_STM32_Bootloader/*
+
+# Allow Core folder structure
+!/Target_ECU_STM32_Bootloader/Core/
+/Target_ECU_STM32_Bootloader/Core/*
+
+!/Target_ECU_STM32_Bootloader/Core/Inc/
+/Target_ECU_STM32_Bootloader/Core/Inc/*
+
+!/Target_ECU_STM32_Bootloader/Core/Src/
+/Target_ECU_STM32_Bootloader/Core/Src/*
+
+# ✅ WHITELIST: Dual-Slot Manager (Memory map, Slot A/B partition, atomic copy)
+!/Target_ECU_STM32_Bootloader/Core/Src/dual_slot_manager.c
+!/Target_ECU_STM32_Bootloader/Core/Inc/dual_slot_manager.h
+
+# ✅ WHITELIST: AES Decryption (Stream-based AES-128-CBC, chunked processing)
+!/Target_ECU_STM32_Bootloader/Core/Src/aes_decrypt.c
+!/Target_ECU_STM32_Bootloader/Core/Inc/aes_decrypt.h
+
+# ✅ WHITELIST: FOTA Security (Verify-then-Decrypt pipeline, dual ECDSA verification)
+!/Target_ECU_STM32_Bootloader/Core/Src/fota_security.c
+!/Target_ECU_STM32_Bootloader/Core/Inc/fota_security.h
+
+# ✅ WHITELIST: FOTA Protocol (Header structure definition, 228-byte layout)
+!/Target_ECU_STM32_Bootloader/Core/Inc/fota_protocol.h
+
+# ✅ WHITELIST: CAN-TP Server (ISO 15765-2 transport layer - FF/CF/FC handling)
+!/Target_ECU_STM32_Bootloader/Core/Src/cantp.c
+!/Target_ECU_STM32_Bootloader/Core/Inc/cantp.h
+
+# ✅ WHITELIST: UDS Server (ISO 14229-1 diagnostic services)
+!/Target_ECU_STM32_Bootloader/Core/Src/uds_server.c
+!/Target_ECU_STM32_Bootloader/Core/Inc/uds_server.h
+
+# ✅ WHITELIST: Flash Operations (Low-level flash programming, erase, verification)
+!/Target_ECU_STM32_Bootloader/Core/Src/flash_ops.c
+!/Target_ECU_STM32_Bootloader/Core/Inc/flash_ops.h
+
+# ✅ WHITELIST: Power-Loss Recovery (Checkpoint-based resume using backup registers)
+!/Target_ECU_STM32_Bootloader/Core/Src/power_loss_recovery.c
+!/Target_ECU_STM32_Bootloader/Core/Inc/power_loss_recovery.h
+
+# ❌ BLOCKED: Main bootloader logic (main.c - secure boot flow, jump to app)
+# ❌ BLOCKED: Public key (public_key.c - security risk if exposed)
+# ❌ BLOCKED: Private crypto keys (aes_key.h, private_key.h)
+# ❌ BLOCKED: Third-party libraries (uECC.c, sha256_minimal.c, tiny-aes-c.c)
+# ❌ BLOCKED: HAL auto-generated files (stm32f1xx_it.c, system_stm32f1xx.c)
+# ❌ BLOCKED: Build artifacts (MDK-ARM/, Drivers/)
+
+# Block entire Drivers folder (HAL library)
+/Target_ECU_STM32_Bootloader/Drivers/
+
+# Block build artifacts
+/Target_ECU_STM32_Bootloader/MDK-ARM/
+
+# ============================================================================
+# 4. TARGET ECU (STM32 Application) - Showcase: Firmware Header & CAN Communication
+# ============================================================================
+# Goal: Demonstrate application-side metadata reading, CAN message handling
+# ============================================================================
+!/Target_ECU_STM32_Application/
+
+# Block all application files by default
+/Target_ECU_STM32_Application/*
+
+# Allow Core folder structure
+!/Target_ECU_STM32_Application/Core/
+/Target_ECU_STM32_Application/Core/*
+
+!/Target_ECU_STM32_Application/Core/Inc/
+/Target_ECU_STM32_Application/Core/Inc/*
+
+!/Target_ECU_STM32_Application/Core/Src/
+/Target_ECU_STM32_Application/Core/Src/*
+
+# ✅ WHITELIST: Firmware Header Reader (Application reads its own metadata)
+!/Target_ECU_STM32_Application/Core/Src/firmware_header.c
+!/Target_ECU_STM32_Application/Core/Inc/firmware_header.h
+
+# ✅ WHITELIST: CAN Communication (CAN-TP frame handling if implemented)
+!/Target_ECU_STM32_Application/Core/Src/can.c
+!/Target_ECU_STM32_Application/Core/Inc/can.h
+
+# ✅ WHITELIST: Version Info (Application version reporting)
+!/Target_ECU_STM32_Application/Core/Src/version.c
+!/Target_ECU_STM32_Application/Core/Inc/version.h
+
+# ❌ BLOCKED: Main application logic (main.c - application flow)
+# ❌ BLOCKED: HAL auto-generated files (gpio.c, usart.c, stm32f1xx_hal_msp.c)
+# ❌ BLOCKED: Build artifacts (MDK-ARM/, Drivers/)
+
+# Block entire Drivers folder
+/Target_ECU_STM32_Application/Drivers/
+
+# Block build artifacts
+/Target_ECU_STM32_Application/MDK-ARM/
+
+# ============================================================================
+# 5. TOOLS FOLDER (Optional - external tools not part of source code)
+# ============================================================================
+# Strategy: Block all tools (SavvyCAN, ST-LINK Utility are large binaries)
+/tools/
+
+# ============================================================================
+# GLOBAL PATTERNS: Block common build artifacts & sensitive files
+# ============================================================================
+
+# Python artifacts
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+**/pip-log.txt
+**/pip-delete-this-directory.txt
+**/.venv/
+**/venv/
+**/.pytest_cache/
+**/*.egg-info/
+
+# ESP-IDF build artifacts
+**/build/
+**/sdkconfig.old
+**/.vscode/
+**/.devcontainer/
+
+# Keil MDK-ARM artifacts
+**/*.uvguix.*
+**/*.uvoptx
+**/DebugConfig/
+**/RTE/
+**/*.lst
+**/*.axf
+**/*.hex
+**/*.bin
+**/*.map
+**/*.lnp
+**/*.o
+**/*.d
+**/*.crf
+**/*.htm
+
+# Git artifacts
+**/.git/
+
+# OS-specific
+**/.DS_Store
+**/Thumbs.db
+**/desktop.ini
+
+# IDE-specific
+**/.idea/
+**/.vscode/settings.json
+**/.vscode/launch.json
+
+# Sensitive files (CRITICAL - never commit)
+**/firebase_config.json
+**/credentials.json
+**/*_private_key.*
+**/*_secret.*
+**/aes_key.h
+**/private_key.h
+**/public_key.h
+
+# Log files
+**/logs/
+**/*.log
+
+# Firmware binaries (compiled outputs, not source)
+**/firmware/*.bin
+**/firmware/signed/*.bin
+
+# Temporary files
+**/*.tmp
+**/*.temp
+**/*.swp
+**/*.swo
+**/*~
+
+# ============================================================================
+# END OF WHITELIST .gitignore
+# ============================================================================
+# Summary of whitelisted files:
+#
+# SERVER_PYTHON: 5 files (crypto_utils.py, firmware_manager.py, protocol.py, network_utils.py, requirements.txt)
+# Gateway_FOTA_ESP32: 8 files (uds_client, udp_discovery, fota_security, fota_protocol, version_checker, isotp_client + headers)
+# Target_STM32_Bootloader: 10 files (dual_slot_manager, aes_decrypt, fota_security, fota_protocol, cantp, uds_server, flash_ops, power_loss_recovery + headers)
+# Target_STM32_Application: 3 files (firmware_header, can, version + headers)
+# Diagrams: All files (4 images)
+#
+# Total: ~26 carefully selected files that demonstrate technical skills
+# without exposing complete proprietary logic or security credentials.
+# ============================================================================
