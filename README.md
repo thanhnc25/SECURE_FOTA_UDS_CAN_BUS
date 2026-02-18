@@ -5,6 +5,11 @@
 [![Security](https://img.shields.io/badge/Security-ECDSA%20P--256%20%7C%20AES--128-red)](https://github.com)
 [![License](https://img.shields.io/badge/License-Academic-orange)](https://github.com)
 
+> ⚠️ **Academic Integrity Notice:** This repository is a **Technical Showcase** of the core architectural concepts, protocol implementations (UDS/CAN-TP), and cryptographic pipelines of my Graduation Thesis. 
+> To protect intellectual property before the official defense, the full source code (including integration logic, linker scripts, and private keys) is kept in a private repository. The modules provided here are functional, industry-standard implementations demonstrating my capabilities.
+
+---
+
 A production-grade **Secure Firmware Over-The-Air (FOTA)** update system for automotive Electronic Control Units (ECUs), implementing **ISO 14229-1 (UDS)** and **ISO 15765-2 (CAN-TP)** diagnostic protocols with **multi-layer cryptographic protection** (dual ECDSA signatures, AES-128-CBC encryption, SHA-256 integrity verification).
 
 ---
@@ -209,3 +214,65 @@ UDS 0x37: Request Transfer Exit (trigger verification)
 | AES-128 Decrypt (7296 bytes) | 1562ms | 4.6 KB/s |
 
 ---
+
+## 🛠️ Repository Structure
+
+```
+SECURE_FOTA_UDS_CAN_BUS/
+├── README.md                           # ⭐ This file
+├── DIAGRAM_GUIDE.txt                   # ⭐ Technical documentation
+├── .gitignore                          # ⭐ Whitelist security strategy
+│
+├── Diagrams/                           # ⭐ System diagrams
+│   ├── SYSTEM ARCHITECTURE.drawio.png
+│   ├── OTA FLOW.drawio.png
+│   ├── MEMORY MAP LAYOUT STM32.drawio.png
+│   └── CAN-TP SEQUENCE DIAGRAM.drawio.png
+│
+├── SERVER_PYTHON/                      # Python FOTA Manager
+│   ├── crypto_utils.py                 # ⭐ AES, ECDSA, SHA-256 implementation
+│   ├── firmware_manager.py             # ⭐ 228-byte header packaging
+│   ├── protocol.py                     # ⭐ FOTA protocol definitions
+│   ├── network_utils.py                # ⭐ TCP/UDP networking
+│   ├── requirements.txt                # ⭐ Python dependencies
+│   ├── main.py                         # 🔒 GUI application (PRIVATE)
+│   ├── firebase_config.json            # 🔒 CRITICAL: Firebase credentials
+│   └── README.md                       # ⭐ Python component documentation
+│
+├── Gateway_FOTA_ESP32/                 # ESP32 Gateway
+│   ├── main/
+│   │   ├── src/
+│   │   │   ├── uds_client.cpp          # ⭐ UDS protocol implementation
+│   │   │   ├── isotp_client.cpp        # ⭐ CAN-TP transport layer
+│   │   │   ├── udp_discovery.cpp       # ⭐ Device discovery
+│   │   │   ├── fota_security.cpp       # ⭐ Pre-validation firewall
+│   │   │   └── version_checker.cpp     # ⭐ Metadata comparison
+│   │   ├── include/                    # ⭐ Header files
+│   │   └── main.cpp                    # 🔒 Application entry (PRIVATE)
+│   ├── CMakeLists.txt                  # ⭐ ESP-IDF build config
+│   └── README.md                       # 🔒 Component documentation (PRIVATE)
+│
+├── Target_ECU_STM32_Bootloader/        # STM32 Secure Bootloader
+│   ├── Core/
+│   │   ├── Src/
+│   │   │   ├── dual_slot_manager.c     # ⭐ Dual-bank flash management
+│   │   │   ├── aes_decrypt.c           # ⭐ Stream-based AES decryption
+│   │   │   ├── fota_security.c         # ⭐ Verify-then-decrypt pipeline
+│   │   │   ├── cantp.c                 # ⭐ CAN-TP server
+│   │   │   ├── uds_server.c            # ⭐ UDS server
+│   │   │   ├── flash_ops.c             # ⭐ Flash programming
+│   │   │   └── power_loss_recovery.c   # ⭐ Checkpoint recovery
+│   │   ├── Inc/                        # ⭐ Header files
+│   │   └── main.c                      # 🔒 Bootloader entry (PRIVATE)
+│   └── README.md                       # ⭐ Bootloader documentation
+│
+└── Target_ECU_STM32_Application/       # STM32 User Application
+    ├── Core/
+    │   ├── Src/
+    │   │   ├── firmware_header.c       # ⭐ Metadata self-reading
+    │   │   ├── can.c                   # ⭐ CAN communication
+    │   │   └── version.c               # ⭐ Version reporting
+    │   ├── Inc/                        # ⭐ Header files
+    │   └── main.c                      # 🔒 Application entry (PRIVATE)
+    └── README.md                       # ⭐ Application documentation
+```
